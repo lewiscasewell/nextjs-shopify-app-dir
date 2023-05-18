@@ -22,7 +22,7 @@ export const ProductCard = ({
       <div className={`bg-zinc-800 ${cardWidth} p-2`}>
         <Image
           src={product.images?.[0].url}
-          alt="image"
+          alt={product.images?.[0].url}
           width={500}
           height={500}
         />

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { NavBar } from "@/components/NavBar";
+import NavBar from "@/components/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="min-h-screen">
+        {/* @ts-expect-error */}
         <NavBar />
         <Suspense>
           <main>{children}</main>

@@ -1,12 +1,26 @@
 import { SHOPIFY_GRAPHQL_API_ENDPOINT } from "../constants";
 import { isShopifyError } from "../type-guards";
+import {
+  addToCartMutation,
+  createCartMutation,
+  editCartItemsMutation,
+  removeFromCartMutation,
+} from "./mutations/cart";
+import { getCartQuery } from "./queries/cart";
 import { getProductQuery, getProductsQuery } from "./queries/product";
 import {
+  Cart,
   Connection,
   Product,
+  ShopifyAddToCartOperation,
+  ShopifyCart,
+  ShopifyCartOperation,
+  ShopifyCreateCartOperation,
   ShopifyProduct,
   ShopifyProductOperation,
   ShopifyProductsOperation,
+  ShopifyRemoveFromCartOperation,
+  ShopifyUpdateCartOperation,
 } from "./types";
 
 const domain = `https://${process.env.SHOPIFY_STORE_DOMAIN!}`;
@@ -74,6 +88,20 @@ const removeEdgesAndNodes = (array: Connection<any>) => {
   return array.edges.map((edge) => edge?.node);
 };
 
+const reshapeCart = (cart: ShopifyCart): Cart => {
+  if (!cart.cost?.totalTaxAmount) {
+    cart.cost.totalTaxAmount = {
+      amount: "0.0",
+      currencyCode: "USD",
+    };
+  }
+
+  return {
+    ...cart,
+    lines: removeEdgesAndNodes(cart.lines),
+  };
+};
+
 const reshapeProduct = (product: ShopifyProduct) => {
   if (!product) {
     return undefined;
@@ -134,4 +162,74 @@ export async function getProducts({
   });
 
   return reshapeProducts(removeEdgesAndNodes(res.body.data.products));
+}
+
+export async function createCart(): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyCreateCartOperation>({
+    query: createCartMutation,
+    cache: "no-store",
+  });
+
+  return reshapeCart(res.body.data.cartCreate.cart);
+}
+
+export async function addToCart(
+  cartId: string,
+  lines: { merchandiseId: string; quantity: number }[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyAddToCartOperation>({
+    query: addToCartMutation,
+    variables: {
+      cartId,
+      lines,
+    },
+    cache: "no-store",
+  });
+  return reshapeCart(res.body.data.cartLinesAdd.cart);
+}
+
+export async function removeFromCart(
+  cartId: string,
+  lineIds: string[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
+    query: removeFromCartMutation,
+    variables: {
+      cartId,
+      lineIds,
+    },
+    cache: "no-store",
+  });
+
+  return reshapeCart(res.body.data.cartLinesRemove.cart);
+}
+
+export async function updateCart(
+  cartId: string,
+  lines: { id: string; merchandiseId: string; quantity: number }[]
+): Promise<Cart> {
+  const res = await shopifyFetch<ShopifyUpdateCartOperation>({
+    query: editCartItemsMutation,
+    variables: {
+      cartId,
+      lines,
+    },
+    cache: "no-store",
+  });
+
+  return reshapeCart(res.body.data.cartLinesUpdate.cart);
+}
+
+export async function getCart(cartId: string): Promise<Cart | null> {
+  const res = await shopifyFetch<ShopifyCartOperation>({
+    query: getCartQuery,
+    variables: { cartId },
+    cache: "no-store",
+  });
+
+  if (!res.body.data.cart) {
+    return null;
+  }
+
+  return reshapeCart(res.body.data.cart);
 }

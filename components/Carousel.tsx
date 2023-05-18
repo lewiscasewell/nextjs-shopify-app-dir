@@ -1,6 +1,4 @@
 import { getProducts } from "@/lib/shopify";
-import Image from "next/image";
-import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 
 export async function Carousel() {
