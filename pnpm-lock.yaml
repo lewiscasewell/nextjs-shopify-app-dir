@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@heroicons/react': ^2.0.18
   '@types/node': 20.1.7
   '@types/react': 18.2.6
   '@types/react-dom': 18.2.4
@@ -15,6 +16,7 @@ specifiers:
   typescript: 5.0.4
 
 dependencies:
+  '@heroicons/react': 2.0.18_react@18.2.0
   '@types/node': 20.1.7
   '@types/react': 18.2.6
   '@types/react-dom': 18.2.4
@@ -77,6 +79,14 @@ packages:
   /@eslint/js/8.40.0:
     resolution: {integrity: sha512-ElyB54bJIhXQYVKjDSvCkPO1iU1tSAeVQJbllWJq1XQSmmA4dgFk8CbiBGpiOPxleE48vDogxCtmMYku4HSVLA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
+
+  /@heroicons/react/2.0.18_react@18.2.0:
+    resolution: {integrity: sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.11.8:
