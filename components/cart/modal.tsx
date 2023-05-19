@@ -60,7 +60,7 @@ export default function CartModal({
               className="flex w-full flex-col bg-white p-8 text-black dark:bg-black dark:text-white md:w-3/5 lg:w-2/5"
             >
               <div className="flex items-center justify-between">
-                <p className="text-lg font-bold">MY CART</p>
+                <p className="text-lg font-bold">MY BAG</p>
                 <button
                   aria-label="Close cart"
                   onClick={onClose}
@@ -75,7 +75,7 @@ export default function CartModal({
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
                   <ShoppingBagIcon className="h-16" />
                   <p className="mt-6 text-center text-2xl font-bold">
-                    Your cart is empty.
+                    Your bag is empty.
                   </p>
                 </div>
               ) : null}
